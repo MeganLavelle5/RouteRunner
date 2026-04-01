@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Route Generator — Route Runner</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    /* ── API KEY BANNER ── */
+    .api-banner {
+      background: #fef3c7;
+      border-bottom: 2px solid #f59e0b;
+      padding: 0.6rem 5%;
+      font-size: 0.85rem;
+      color: #92400e;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .api-banner a { color: #92400e; font-weight: 700; text-decoration: underline; }
+
+    /* ── LAYOUT ── */
+    .rg-layout {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      height: calc(100vh - 70px);
+      margin-top: 70px;
+    }
+
+    /* ── FORM PANEL ── */
+    .rg-panel {
+      background: var(--white);
+      border-right: 1px solid var(--gray-light);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .rg-panel-header {
+      background: var(--navy);
+      padding: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .rg-panel-header h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 0.2rem;
+    }
+
+    .rg-panel-header p {
+      color: rgba(255,255,255,0.65);
+      font-size: 0.82rem;
+    }
+
+    .rg-form {
+      padding: 1.5rem;
+      flex: 1;
+    }
+
+    .rg-form .form-group { margin-bottom: 1.2rem; }
+
+    .rg-form label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.4rem;
+    }
+
+    .rg-form input[type="text"],
+    .rg-form input[type="number"],
+    .rg-form select {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      border: 2px solid var(--gray-light);
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .rg-form input:focus,
+    .rg-form select:focus { border-color: var(--orange); }
+
+    .location-row {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .location-row input { flex: 1; }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 2px solid var(--gray-light);
+      background: var(--light);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--navy);
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .icon-btn:hover { border-color: var(--orange); color: var(--orange); }
+
+    /* Distance slider */
+    .distance-display {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+
+    .distance-val {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--orange);
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--orange);
+      height: 6px;
+      cursor: pointer;
+    }
+
+    .range-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--gray);
+      margin-top: 0.3rem;
+    }
+
+    /* Terrain pills */
+    .terrain-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .terrain-pill {
+      flex: 1;
+      text-align: center;
+      padding: 0.6rem 0.3rem;
+      border-radius: 8px;
+      border: 2px solid var(--gray-light);
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--gray);
+      background: var(--light);
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .terrain-pill:hover { border-color: var(--orange); color: var(--orange); }
+    .terrain-pill.active { border-color: var(--orange); background: rgba(249,115,22,0.08); color: var(--orange); }
+    .terrain-pill .t-icon { font-size: 1.2rem; display: block; margin-bottom: 0.2rem; }
+
+    /* Route type toggle */
+    .route-type-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .route-type-btn {
+      padding: 0.65rem;
+      border-radius: 8px;
+      border: 2px solid var(--gray-light);
+      background: var(--light);
+      cursor: pointer;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--gray);
+      transition: all 0.2s;
+    }
+
+    .route-type-btn.active {
+      border-color: var(--orange);
+      background: rgba(249,115,22,0.08);
+      color: var(--orange);
+    }
+
+    /* Generate button */
+    .generate-btn {
+      width: 100%;
+      padding: 0.9rem;
+      background: var(--orange);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .generate-btn:hover { background: var(--orange-dark); transform: translateY(-1px); }
+    .generate-btn:disabled { background: var(--gray); cursor: not-allowed; transform: none; }
+
+    .retry-btn {
+      width: 100%;
+      padding: 0.65rem;
+      background: transparent;
+      color: var(--navy);
+      border: 2px solid var(--gray-light);
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    .retry-btn:hover { border-color: var(--navy); }
+    .retry-btn.visible { display: block; }
+
+    /* Loading spinner */
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── MAP ── */
+    #map {
+      width: 100%;
+      height: 100%;
+      background: #e8edf5;
+    }
+
+    .map-empty-state {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: var(--gray);
+      pointer-events: none;
+      z-index: 500;
+    }
+
+    .map-empty-state svg { margin: 0 auto 0.75rem; opacity: 0.3; }
+    .map-empty-state p { font-size: 0.9rem; }
+
+    /* ── STATS BAR (below map, inside right panel) ── */
+    .rg-stats {
+      display: none;
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(27,42,74,0.92);
+      backdrop-filter: blur(8px);
+      padding: 1rem 1.5rem;
+      display: none;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      z-index: 600;
+    }
+
+    .rg-stats.visible { display: grid; }
+
+    .stat-item { text-align: center; }
+    .stat-item .val {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--orange);
+    }
+    .stat-item .lbl {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.65);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── AI DESCRIPTION CARD ── */
+    .rg-description {
+      display: none;
+      background: var(--white);
+      border-top: 1px solid var(--gray-light);
+      padding: 1.2rem 1.5rem;
+      font-size: 0.9rem;
+      color: var(--gray);
+      line-height: 1.7;
+      flex-shrink: 0;
+    }
+
+    .rg-description.visible { display: block; }
+
+    .rg-description strong {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--orange);
+      margin-bottom: 0.4rem;
+    }
+
+    /* error toast */
+    .error-toast {
+      display: none;
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: #b91c1c;
+      margin-top: 0.75rem;
+    }
+
+    .error-toast.visible { display: block; }
+
+    /* map container needs position:relative for stats overlay */
+    .rg-map-wrapper {
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      .rg-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 400px;
+        height: auto;
+      }
+      .rg-panel { max-height: none; }
+      .rg-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- API KEY REMINDER BANNER -->
+  <div class="api-banner" id="apiBanner">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    Add your API keys in <code style="background:rgba(0,0,0,0.08);padding:1px 5px;border-radius:3px;">route-generator.html</code> at the top of the &lt;script&gt; tag to activate route generation.
+    <button onclick="document.getElementById('apiBanner').style.display='none'" style="background:none;border:none;cursor:pointer;margin-left:0.5rem;font-size:1rem;color:#92400e;">✕</button>
+  </div>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <a class="nav-logo" href="index.html">
+      <svg width="36" height="36" viewBox="0 0 90 90" fill="none">
+        <defs>
+          <linearGradient id="rgb" x1="0" y1="0" x2="90" y2="90" gradientUnits="userSpaceOnUse"><stop stop-color="#1b2a4a"/><stop offset="1" stop-color="#2d4a7a"/></linearGradient>
+          <linearGradient id="rgr" x1="12" y1="0" x2="78" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#22c55e"/><stop offset="0.45" stop-color="#facc15"/><stop offset="1" stop-color="#f97316"/></linearGradient>
+        </defs>
+        <rect width="90" height="90" rx="20" fill="url(#rgb)"/>
+        <path d="M14 72 C18 72 20 44 32 48 C44 52 42 70 57 63 C64 59 68 40 74 34 C77 30 78 18 78 18" stroke="url(#rgr)" stroke-width="6" stroke-linecap="round" fill="none"/>
+        <circle cx="14" cy="72" r="7" fill="#22c55e"/>
+        <circle cx="14" cy="72" r="3.5" fill="white"/>
+        <circle cx="78" cy="14" r="7" fill="#f97316"/>
+        <circle cx="78" cy="14" r="3.5" fill="white"/>
+        <line x1="78" y1="21" x2="78" y2="31" stroke="#f97316" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+      Route Runner
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="how-it-works.html">How It Works</a></li>
+      <li><a href="route-generator.html">Generate Route</a></li>
+      <li><a href="contact.html" class="nav-cta">Contact</a></li>
+    </ul>
+
+    <button class="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- MAIN LAYOUT -->
+  <div class="rg-layout">
+
+    <!-- LEFT: FORM PANEL -->
+    <div class="rg-panel">
+      <div class="rg-panel-header">
+        <h2>Generate Your Route</h2>
+        <p>Tell us your preferences and we'll build the perfect run.</p>
+      </div>
+
+      <div class="rg-form">
+
+        <!-- Start Location -->
+        <div class="form-group">
+          <label>Start Location</label>
+          <div class="location-row">
+            <input type="text" id="startAddress" placeholder="e.g. 123 Main St, State College, PA" />
+            <button class="icon-btn" id="geoBtn" title="Use my current location">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Route Type -->
+        <div class="form-group">
+          <label>Route Type</label>
+          <div class="route-type-group">
+            <button class="route-type-btn active" data-type="loop">
+              ↩ Loop Route<br><span style="font-size:0.72rem;font-weight:400;color:inherit;opacity:0.7">Return to start</span>
+            </button>
+            <button class="route-type-btn" data-type="point">
+              → Point-to-Point<br><span style="font-size:0.72rem;font-weight:400;color:inherit;opacity:0.7">Custom end point</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- End Location (hidden by default) -->
+        <div class="form-group" id="endGroup" style="display:none;">
+          <label>End Location</label>
+          <input type="text" id="endAddress" placeholder="e.g. Central Park, New York, NY" />
+        </div>
+
+        <!-- Distance -->
+        <div class="form-group">
+          <label>Distance</label>
+          <div class="distance-display">
+            <span id="distanceLabel" class="distance-val">5.0 mi</span>
+            <span style="font-size:0.8rem;color:var(--gray)">≈ <span id="kmLabel">8.0 km</span></span>
+          </div>
+          <input type="range" id="distanceSlider" min="1" max="20" step="0.5" value="5">
+          <div class="range-labels"><span>1 mi</span><span>5 mi</span><span>10 mi</span><span>20 mi</span></div>
+        </div>
+
+        <!-- Terrain -->
+        <div class="form-group">
+          <label>Terrain Preference</label>
+          <div class="terrain-group">
+            <div class="terrain-pill active" data-terrain="flat">
+              <span class="t-icon">🏃</span>Flat
+            </div>
+            <div class="terrain-pill" data-terrain="mixed">
+              <span class="t-icon">⛰️</span>Mixed
+            </div>
+            <div class="terrain-pill" data-terrain="hilly">
+              <span class="t-icon">🏔️</span>Hilly
+            </div>
+          </div>
+        </div>
+
+        <!-- Generate Button -->
+        <button class="generate-btn" id="generateBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          <span id="btnText">Generate My Route</span>
+          <div class="spinner" id="spinner"></div>
+        </button>
+
+        <button class="retry-btn" id="retryBtn">
+          🔄 Try a Different Route
+        </button>
+
+        <div class="error-toast" id="errorToast"></div>
+
+      </div>
+
+      <!-- AI Description -->
+      <div class="rg-description" id="aiDescription">
+        <strong>🤖 AI Route Description</strong>
+        <span id="aiText">Generating your personalized route description...</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: MAP -->
+    <div class="rg-map-wrapper">
+      <div id="map"></div>
+
+      <div class="map-empty-state" id="emptyState">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+        <p>Enter your start location<br>and hit <strong>Generate My Route</strong></p>
+      </div>
+
+      <!-- Stats overlay -->
+      <div class="rg-stats" id="statsBar">
+        <div class="stat-item">
+          <div class="val" id="statDistance">—</div>
+          <div class="lbl">Distance</div>
+        </div>
+        <div class="stat-item">
+          <div class="val" id="statTime">—</div>
+          <div class="lbl">Est. Time</div>
+        </div>
+        <div class="stat-item">
+          <div class="val" id="statElevation">—</div>
+          <div class="lbl">Elevation Gain</div>
+        </div>
+        <div class="stat-item">
+          <div class="val" id="statPace">—</div>
+          <div class="lbl">Avg Pace</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /rg-layout -->
+
+  <script>
+    // ============================================================
+    //  🔑 ADD YOUR API KEYS HERE
+    // ============================================================
+    const ORS_API_KEY   = 'key here';    // openrouteservice.org
+    const CLAUDE_API_KEY = 'key here'; // console.anthropic.com
+    // ============================================================
+
+    // ── State ──
+    let map, routeLayer, startMarker, endMarker;
+    let currentSeed = Math.floor(Math.random() * 9999);
+    let selectedTerrain = 'flat';
+    let selectedRouteType = 'loop';
+    let startCoords = null;
+
+    // ── Init Leaflet map ──
+    map = L.map('map', { zoomControl: true }).setView([40.7934, -77.8600], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19
+    }).addTo(map);
+
+    // Custom markers
+    const startIcon = L.divIcon({
+      className: '',
+      html: `<div style="width:16px;height:16px;background:#22c55e;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3)"></div>`,
+      iconSize: [16, 16], iconAnchor: [8, 8]
+    });
+
+    const endIcon = L.divIcon({
+      className: '',
+      html: `<div style="width:16px;height:16px;background:#f97316;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3)"></div>`,
+      iconSize: [16, 16], iconAnchor: [8, 8]
+    });
+
+    // ── Distance slider ──
+    const slider = document.getElementById('distanceSlider');
+    slider.addEventListener('input', () => {
+      const mi = parseFloat(slider.value);
+      document.getElementById('distanceLabel').textContent = mi.toFixed(1) + ' mi';
+      document.getElementById('kmLabel').textContent = (mi * 1.60934).toFixed(1) + ' km';
+    });
+
+    // ── Terrain pills ──
+    document.querySelectorAll('.terrain-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.terrain-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        selectedTerrain = pill.dataset.terrain;
+      });
+    });
+
+    // ── Route type toggle ──
+    document.querySelectorAll('.route-type-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.route-type-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedRouteType = btn.dataset.type;
+        document.getElementById('endGroup').style.display =
+          selectedRouteType === 'point' ? 'block' : 'none';
+      });
+    });
+
+    // ── Geolocation button ──
+    document.getElementById('geoBtn').addEventListener('click', () => {
+      if (!navigator.geolocation) return showError('Geolocation not supported by your browser.');
+      navigator.geolocation.getCurrentPosition(pos => {
+        startCoords = [pos.coords.longitude, pos.coords.latitude];
+        document.getElementById('startAddress').value = 'My Current Location';
+        map.setView([pos.coords.latitude, pos.coords.longitude], 14);
+        if (startMarker) map.removeLayer(startMarker);
+        startMarker = L.marker([pos.coords.latitude, pos.coords.longitude], { icon: startIcon }).addTo(map);
+      }, () => showError('Could not get your location. Please enter an address instead.'));
+    });
+
+    // ── Geocode address → [lng, lat] ──
+    async function geocode(address) {
+      const url = `https://api.openrouteservice.org/geocode/search?api_key=${ORS_API_KEY}&text=${encodeURIComponent(address)}&size=1`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Geocoding failed. Check your ORS API key.');
+      const data = await res.json();
+      if (!data.features || data.features.length === 0) throw new Error(`Could not find "${address}". Try a more specific address.`);
+      return data.features[0].geometry.coordinates; // [lng, lat]
+    }
+
+    // ── Generate Route via ORS ──
+    async function generateRoute(startCoords, endCoords, distanceMiles, seed) {
+      const distanceMeters = distanceMiles * 1609.34;
+      let body;
+
+      if (selectedRouteType === 'loop') {
+        body = {
+          coordinates: [startCoords],
+          options: {
+            round_trip: {
+              length: distanceMeters,
+              points: selectedTerrain === 'hilly' ? 8 : selectedTerrain === 'mixed' ? 5 : 3,
+              seed: seed
+            }
+          },
+          elevation: true,
+          instructions: false
+        };
+      } else {
+        body = {
+          coordinates: [startCoords, endCoords],
+          elevation: true,
+          instructions: false
+        };
+      }
+
+      const res = await fetch('https://api.openrouteservice.org/v2/directions/foot-walking/geojson', {
+        method: 'POST',
+        headers: {
+          'Authorization': ORS_API_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error?.message || 'Route generation failed. Check your ORS API key.');
+      }
+
+      return await res.json();
+    }
+
+    // ── Get elevation gain from route geometry ──
+    function calcElevationGain(coords) {
+      let gain = 0;
+      for (let i = 1; i < coords.length; i++) {
+        const diff = (coords[i][2] || 0) - (coords[i - 1][2] || 0);
+        if (diff > 0) gain += diff;
+      }
+      return Math.round(gain * 3.28084); // meters → feet
+    }
+
+    // ── Claude AI route description ──
+    async function getAIDescription(startAddress, distanceMiles, terrain, elevGain, minutes) {
+      if (CLAUDE_API_KEY === 'YOUR_CLAUDE_API_KEY') {
+        return `A ${distanceMiles}-mile ${terrain} loop starting from ${startAddress}. ` +
+          `Estimated ${minutes} minutes with ${elevGain} ft of elevation gain. ` +
+          `Add your Claude API key to get a personalized AI description of this route!`;
+      }
+
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': CLAUDE_API_KEY,
+          'anthropic-version': '2023-06-01',
+          'content-type': 'application/json',
+          'anthropic-dangerous-allow-browser': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 180,
+          messages: [{
+            role: 'user',
+            content: `You are an enthusiastic running coach. Write 2-3 energetic sentences describing this running route to get a runner excited. Be specific and motivating. No intro phrases like "Here is" or "This route".
+
+Route: ${distanceMiles} miles, ${terrain} terrain, starting near ${startAddress}
+Elevation gain: ${elevGain} ft, Estimated time: ${minutes} min`
+          }]
+        })
+      });
+
+      if (!res.ok) return 'Could not load AI description. Check your Claude API key.';
+      const data = await res.json();
+      return data.content[0].text;
+    }
+
+    // ── Draw route on map ──
+    function drawRoute(geojson) {
+      if (routeLayer) map.removeLayer(routeLayer);
+      if (startMarker) map.removeLayer(startMarker);
+      if (endMarker) map.removeLayer(endMarker);
+
+      const coords = geojson.features[0].geometry.coordinates; // [lng, lat, elev]
+
+      routeLayer = L.geoJSON(geojson, {
+        style: {
+          color: '#f97316',
+          weight: 5,
+          opacity: 0.9,
+          lineCap: 'round',
+          lineJoin: 'round'
+        }
+      }).addTo(map);
+
+      // Start marker
+      const startLatLng = [coords[0][1], coords[0][0]];
+      startMarker = L.marker(startLatLng, { icon: startIcon })
+        .addTo(map)
+        .bindPopup('<strong style="color:#22c55e">▶ Start</strong>');
+
+      // End marker
+      const lastCoord = coords[coords.length - 1];
+      const endLatLng = [lastCoord[1], lastCoord[0]];
+      endMarker = L.marker(endLatLng, { icon: endIcon })
+        .addTo(map)
+        .bindPopup('<strong style="color:#f97316">⚑ Finish</strong>');
+
+      map.fitBounds(routeLayer.getBounds(), { padding: [40, 40] });
+
+      return coords;
+    }
+
+    // ── Update stats bar ──
+    function showStats(distanceMiles, elevGain) {
+      const pace = selectedTerrain === 'hilly' ? 11 : selectedTerrain === 'mixed' ? 10 : 9;
+      const minutes = Math.round(distanceMiles * pace);
+      const hrs = Math.floor(minutes / 60);
+      const mins = minutes % 60;
+      const timeStr = hrs > 0 ? `${hrs}h ${mins}m` : `${mins}m`;
+
+      document.getElementById('statDistance').textContent = distanceMiles.toFixed(1) + ' mi';
+      document.getElementById('statTime').textContent = timeStr;
+      document.getElementById('statElevation').textContent = elevGain + ' ft';
+      document.getElementById('statPace').textContent = pace + ':00 /mi';
+      document.getElementById('statsBar').classList.add('visible');
+
+      return minutes;
+    }
+
+    // ── Error helper ──
+    function showError(msg) {
+      const toast = document.getElementById('errorToast');
+      toast.textContent = msg;
+      toast.classList.add('visible');
+    }
+
+    function clearError() {
+      document.getElementById('errorToast').classList.remove('visible');
+    }
+
+    // ── Main: handle generate ──
+    async function handleGenerate() {
+      clearError();
+
+      const startAddr = document.getElementById('startAddress').value.trim();
+      const endAddr   = document.getElementById('endAddress').value.trim();
+      const distanceMiles = parseFloat(slider.value);
+
+      if (!startAddr && !startCoords) {
+        showError('Please enter a start location or use the GPS button.');
+        return;
+      }
+
+      if (ORS_API_KEY === 'YOUR_ORS_API_KEY') {
+        showError('Please add your OpenRouteService API key in the <script> tag at the bottom of route-generator.html.');
+        return;
+      }
+
+      // Loading state
+      const btn = document.getElementById('generateBtn');
+      document.getElementById('btnText').textContent = 'Generating...';
+      document.getElementById('spinner').style.display = 'block';
+      btn.disabled = true;
+      document.getElementById('emptyState').style.display = 'none';
+
+      try {
+        // Geocode start
+        if (startAddr !== 'My Current Location' || !startCoords) {
+          startCoords = await geocode(startAddr);
+        }
+
+        // Geocode end (point-to-point)
+        let endCoords = null;
+        if (selectedRouteType === 'point') {
+          if (!endAddr) throw new Error('Please enter an end location for point-to-point routes.');
+          endCoords = await geocode(endAddr);
+        }
+
+        // Generate route
+        const geojson = await generateRoute(startCoords, endCoords, distanceMiles, currentSeed);
+        const coords  = drawRoute(geojson);
+
+        // Actual distance from response
+        const actualMeters   = geojson.features[0].properties.summary.distance;
+        const actualMiles    = actualMeters / 1609.34;
+        const elevGain       = calcElevationGain(coords);
+        const minutes        = showStats(actualMiles, elevGain);
+
+        // AI description
+        document.getElementById('aiDescription').classList.add('visible');
+        document.getElementById('aiText').textContent = 'Generating route description...';
+        const description = await getAIDescription(startAddr || 'your location', actualMiles.toFixed(1), selectedTerrain, elevGain, minutes);
+        document.getElementById('aiText').textContent = description;
+
+        // Show retry button
+        document.getElementById('retryBtn').classList.add('visible');
+
+      } catch (err) {
+        showError(err.message);
+        document.getElementById('emptyState').style.display = 'block';
+      } finally {
+        document.getElementById('btnText').textContent = 'Generate My Route';
+        document.getElementById('spinner').style.display = 'none';
+        btn.disabled = false;
+      }
+    }
+
+    document.getElementById('generateBtn').addEventListener('click', handleGenerate);
+
+    document.getElementById('retryBtn').addEventListener('click', () => {
+      currentSeed = Math.floor(Math.random() * 9999);
+      handleGenerate();
+    });
+
+    // Hamburger nav
+    document.querySelector('.hamburger').addEventListener('click', () => {
+      document.querySelector('.nav-links').classList.toggle('open');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<svg width="380" height="90" viewBox="0 0 380 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="90" y2="90" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1b2a4a"/>
+      <stop offset="1" stop-color="#2d4a7a"/>
+    </linearGradient>
+    <linearGradient id="routeGrad" x1="12" y1="0" x2="78" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22c55e"/>
+      <stop offset="0.45" stop-color="#facc15"/>
+      <stop offset="1" stop-color="#f97316"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- ── Icon badge ── -->
+  <rect width="90" height="90" rx="20" fill="url(#bgGrad)"/>
+
+  <!-- Route winding path -->
+  <path d="M14 72 C18 72 20 44 32 48 C44 52 42 70 57 63 C64 59 68 40 74 34 C77 30 78 18 78 18"
+        stroke="url(#routeGrad)" stroke-width="4.5" stroke-linecap="round" fill="none" filter="url(#glow)"/>
+
+  <!-- Start dot — green -->
+  <circle cx="14" cy="72" r="8" fill="#22c55e" opacity="0.25"/>
+  <circle cx="14" cy="72" r="5.5" fill="#22c55e"/>
+  <circle cx="14" cy="72" r="2.5" fill="white"/>
+
+  <!-- End map pin — orange -->
+  <circle cx="78" cy="14" r="9" fill="#f97316" opacity="0.25"/>
+  <circle cx="78" cy="14" r="6.5" fill="#f97316"/>
+  <circle cx="78" cy="14" r="3" fill="white"/>
+  <line x1="78" y1="20" x2="78" y2="30" stroke="#f97316" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Running figure silhouette (white, mid-route) -->
+  <!-- head -->
+  <circle cx="46" cy="53" r="4" fill="white" opacity="0.75"/>
+  <!-- body -->
+  <path d="M46 57 L44 64 L41 70" stroke="white" stroke-width="2.2" stroke-linecap="round" opacity="0.75" fill="none"/>
+  <path d="M44 64 L48 69 L51 74" stroke="white" stroke-width="2.2" stroke-linecap="round" opacity="0.75" fill="none"/>
+  <!-- arms -->
+  <path d="M44 59 L40 62 M46 58 L50 56" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.75"/>
+
+  <!-- ── Wordmark ── -->
+  <!-- "ROUTE" — dark navy -->
+  <text x="108" y="48"
+        font-family="'Montserrat','Arial Black',Arial,sans-serif"
+        font-weight="900"
+        font-size="34"
+        fill="#1b2a4a"
+        letter-spacing="2">ROUTE</text>
+
+  <!-- "RUNNER" — orange -->
+  <text x="108" y="82"
+        font-family="'Montserrat','Arial Black',Arial,sans-serif"
+        font-weight="900"
+        font-size="34"
+        fill="#f97316"
+        letter-spacing="2">RUNNER</text>
+
+  <!-- Tagline -->
+  <text x="110" y="96"
+        font-family="'Inter',Arial,sans-serif"
+        font-size="11"
+        fill="#64748b"
+        letter-spacing="0.5">Your personalized run route</text>
+</svg>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Route Runner — Run Smarter. Run Faster.</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <a class="nav-logo" href="index.html">
+      <svg width="36" height="36" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="nb" x1="0" y1="0" x2="90" y2="90" gradientUnits="userSpaceOnUse"><stop stop-color="#1b2a4a"/><stop offset="1" stop-color="#2d4a7a"/></linearGradient>
+          <linearGradient id="nr" x1="12" y1="0" x2="78" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#22c55e"/><stop offset="0.45" stop-color="#facc15"/><stop offset="1" stop-color="#f97316"/></linearGradient>
+        </defs>
+        <rect width="90" height="90" rx="20" fill="url(#nb)"/>
+        <path d="M14 72 C18 72 20 44 32 48 C44 52 42 70 57 63 C64 59 68 40 74 34 C77 30 78 18 78 18" stroke="url(#nr)" stroke-width="6" stroke-linecap="round" fill="none"/>
+        <circle cx="14" cy="72" r="7" fill="#22c55e"/>
+        <circle cx="14" cy="72" r="3.5" fill="white"/>
+        <circle cx="78" cy="14" r="7" fill="#f97316"/>
+        <circle cx="78" cy="14" r="3.5" fill="white"/>
+        <line x1="78" y1="21" x2="78" y2="31" stroke="#f97316" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+      Route Runner
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="how-it-works.html">How It Works</a></li>
+      <li><a href="route-generator.html">Generate Route</a></li>
+      <li><a href="contact.html" class="nav-cta">Contact</a></li>
+    </ul>
+
+    <button class="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Personalized Running Coaching
+      </div>
+      <h1>Run Smarter.<br><span>Race Faster.</span></h1>
+      <p>Expert one-on-one coaching tailored to your goals — whether you're chasing your first 5K or a marathon PR. Science-backed training that fits your life.</p>
+      <div class="hero-btns">
+        <a href="how-it-works.html" class="btn btn-primary">See How It Works</a>
+        <a href="contact.html" class="btn btn-outline">Work With Me</a>
+      </div>
+    </div>
+
+    <!-- Decorative background SVG -->
+    <svg class="hero-graphic" width="500" height="500" viewBox="0 0 500 500" fill="none">
+      <circle cx="250" cy="250" r="240" stroke="white" stroke-width="2"/>
+      <circle cx="250" cy="250" r="180" stroke="white" stroke-width="1.5"/>
+      <circle cx="250" cy="250" r="120" stroke="white" stroke-width="1"/>
+    </svg>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat">
+      <h3 data-count="200" data-suffix="+">0+</h3>
+      <p>Athletes Coached</p>
+    </div>
+    <div class="stat">
+      <h3 data-count="95" data-suffix="%">0%</h3>
+      <p>Hit Their Goal Race</p>
+    </div>
+    <div class="stat">
+      <h3 data-count="8" data-suffix="">0</h3>
+      <p>Years Coaching Experience</p>
+    </div>
+    <div class="stat">
+      <h3 data-count="50" data-suffix="+">0+</h3>
+      <p>PR's Set This Year</p>
+    </div>
+  </div>
+
+  <!-- SERVICES / WHAT I OFFER -->
+  <section class="services fade-in">
+    <div class="section-label">What I Offer</div>
+    <h2 class="section-title">Coaching built around <em>you</em></h2>
+    <p class="section-sub">Every athlete is different. I design plans that match your schedule, fitness level, and race goals — no cookie-cutter programs.</p>
+
+    <div class="cards-grid">
+      <div class="card fade-in">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        </div>
+        <h3>Custom Training Plans</h3>
+        <p>Weekly plans built around your life — your paces, your schedule, your goals. Adjust as we go based on your feedback and progress.</p>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>1-on-1 Coaching Calls</h3>
+        <p>Regular video calls to review your workouts, discuss your training, troubleshoot issues, and keep you motivated through every phase.</p>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <h3>Performance Analysis</h3>
+        <p>Deep dives into your GPS and heart rate data to identify patterns, optimize your pacing strategy, and eliminate training guesswork.</p>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3>Community & Accountability</h3>
+        <p>Access to a private community of coached runners — share wins, get support, and stay accountable with athletes who get it.</p>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Injury Prevention</h3>
+        <p>Strength routines, mobility work, and smart load management so you can stay consistent and make it to the start line healthy.</p>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <h3>Race Strategy</h3>
+        <p>Personalized race-day plans covering pacing, nutrition, warm-up, and mental tactics so you can execute your best performance.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- EMAIL CAPTURE -->
+  <section class="email-section">
+    <div class="section-label" style="color:rgba(255,255,255,0.6)">Free Resource</div>
+    <h2>Get My Free Training Guide</h2>
+    <p>Join 1,000+ runners and receive my 5-day email series on building a smarter training foundation — plus weekly tips delivered to your inbox.</p>
+
+    <form class="email-form" id="emailForm">
+      <input type="email" placeholder="Enter your email address" required>
+      <button type="submit">Send It My Way</button>
+    </form>
+    <p class="form-success" id="formSuccess">You're in! Check your inbox for your first email.</p>
+    <p style="color:rgba(255,255,255,0.45); font-size:0.78rem; margin-top:1rem;">No spam, ever. Unsubscribe anytime.</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a class="nav-logo" href="index.html">
+          <svg width="30" height="30" viewBox="0 0 90 90" fill="none">
+            <defs>
+              <linearGradient id="fb" x1="0" y1="0" x2="90" y2="90" gradientUnits="userSpaceOnUse"><stop stop-color="#1b2a4a"/><stop offset="1" stop-color="#2d4a7a"/></linearGradient>
+              <linearGradient id="fr" x1="12" y1="0" x2="78" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#22c55e"/><stop offset="0.45" stop-color="#facc15"/><stop offset="1" stop-color="#f97316"/></linearGradient>
+            </defs>
+            <rect width="90" height="90" rx="20" fill="url(#fb)"/>
+            <path d="M14 72 C18 72 20 44 32 48 C44 52 42 70 57 63 C64 59 68 40 74 34 C77 30 78 18 78 18" stroke="url(#fr)" stroke-width="6" stroke-linecap="round" fill="none"/>
+            <circle cx="14" cy="72" r="7" fill="#22c55e"/>
+            <circle cx="14" cy="72" r="3.5" fill="white"/>
+            <circle cx="78" cy="14" r="7" fill="#f97316"/>
+            <circle cx="78" cy="14" r="3.5" fill="white"/>
+            <line x1="78" y1="21" x2="78" y2="31" stroke="#f97316" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+          Route Runner
+        </a>
+        <p>Expert running coaching to help everyday athletes run their best races.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Pages</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <ul>
+          <li><a href="contact.html">Work With Me</a></li>
+          <li><a href="contact.html">Send a Message</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 Route Runner. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

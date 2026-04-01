@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How It Works — Route Runner</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <a class="nav-logo" href="index.html">
+      <svg width="36" height="36" viewBox="0 0 90 90" fill="none">
+        <defs>
+          <linearGradient id="hb" x1="0" y1="0" x2="90" y2="90" gradientUnits="userSpaceOnUse"><stop stop-color="#1b2a4a"/><stop offset="1" stop-color="#2d4a7a"/></linearGradient>
+          <linearGradient id="hr" x1="12" y1="0" x2="78" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#22c55e"/><stop offset="0.45" stop-color="#facc15"/><stop offset="1" stop-color="#f97316"/></linearGradient>
+        </defs>
+        <rect width="90" height="90" rx="20" fill="url(#hb)"/>
+        <path d="M14 72 C18 72 20 44 32 48 C44 52 42 70 57 63 C64 59 68 40 74 34 C77 30 78 18 78 18" stroke="url(#hr)" stroke-width="6" stroke-linecap="round" fill="none"/>
+        <circle cx="14" cy="72" r="7" fill="#22c55e"/>
+        <circle cx="14" cy="72" r="3.5" fill="white"/>
+        <circle cx="78" cy="14" r="7" fill="#f97316"/>
+        <circle cx="78" cy="14" r="3.5" fill="white"/>
+        <line x1="78" y1="21" x2="78" y2="31" stroke="#f97316" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+      Route Runner
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="how-it-works.html">How It Works</a></li>
+      <li><a href="route-generator.html">Generate Route</a></li>
+      <li><a href="contact.html" class="nav-cta">Contact</a></li>
+    </ul>
+
+    <button class="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="section-label">The Process</div>
+    <h1>How It Works</h1>
+    <p>From your front door to the perfect route — here's exactly how Route Runner builds your run.</p>
+  </div>
+
+  <!-- INTERACTIVE DEMO -->
+  <section class="hiw-section">
+    <div style="text-align:center; margin-bottom:2.5rem;" class="fade-in">
+      <div class="section-label">Interactive Walkthrough</div>
+      <h2 class="section-title">Click each step to explore</h2>
+      <p class="section-sub" style="margin:0 auto">See exactly how Route Runner generates a personalized route just for you.</p>
+    </div>
+
+    <div class="demo-container fade-in">
+      <!-- STEP BUTTONS -->
+      <div class="demo-steps">
+        <button class="demo-step-btn active">
+          <div class="step-num">1</div>
+          <div class="step-info">
+            <h4>Enter Your Location</h4>
+            <p>Type an address or use GPS</p>
+          </div>
+        </button>
+
+        <button class="demo-step-btn">
+          <div class="step-num">2</div>
+          <div class="step-info">
+            <h4>Set Your Preferences</h4>
+            <p>Distance, terrain &amp; route type</p>
+          </div>
+        </button>
+
+        <button class="demo-step-btn">
+          <div class="step-num">3</div>
+          <div class="step-info">
+            <h4>AI Builds Your Route</h4>
+            <p>Smart generation in seconds</p>
+          </div>
+        </button>
+
+        <button class="demo-step-btn">
+          <div class="step-num">4</div>
+          <div class="step-info">
+            <h4>Review &amp; Adjust</h4>
+            <p>See stats &amp; try variations</p>
+          </div>
+        </button>
+
+        <button class="demo-step-btn">
+          <div class="step-num">5</div>
+          <div class="step-info">
+            <h4>Hit the Road!</h4>
+            <p>Run your custom route</p>
+          </div>
+        </button>
+      </div>
+
+      <!-- DEMO PANELS -->
+      <div class="demo-panel">
+
+        <!-- STEP 1 -->
+        <div class="demo-content active">
+          <h3>Step 1 — Enter Your Location</h3>
+          <p>Start by telling Route Runner where you want to begin your run. Type any address, landmark, or neighborhood — or tap the GPS button to instantly use your current location. Route Runner works anywhere in the world.</p>
+          <div class="demo-visual">
+            <p style="font-size:0.85rem; font-weight:600; color:var(--navy); margin-bottom:0.75rem">Ways to set your start point:</p>
+            <ul class="checklist">
+              <li>Type a home address or street name</li>
+              <li>Enter a landmark (e.g. "Penn State University")</li>
+              <li>Use the GPS button for your current location</li>
+              <li>Works when traveling — any city, any country</li>
+              <li>Set a custom end point for point-to-point routes</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="demo-content">
+          <h3>Step 2 — Set Your Preferences</h3>
+          <p>Tell Route Runner exactly what kind of run you're looking for. Choose your distance, whether you want a loop back to your start or a point-to-point route, and your terrain preference — flat roads, rolling hills, or a challenging hilly course.</p>
+          <div class="demo-visual">
+            <p style="font-size:0.85rem; font-weight:600; color:var(--navy); margin-bottom:0.5rem">Your customization options</p>
+            <div class="metric-row"><span class="metric-label">Distance range</span><span class="metric-value">1 – 20 miles</span></div>
+            <div class="metric-row"><span class="metric-label">Terrain: Flat</span><span class="metric-value">Roads &amp; paths 🏃</span></div>
+            <div class="metric-row"><span class="metric-label">Terrain: Mixed</span><span class="metric-value">Some elevation ⛰️</span></div>
+            <div class="metric-row"><span class="metric-label">Terrain: Hilly</span><span class="metric-value">Max challenge 🏔️</span></div>
+            <div class="metric-row"><span class="metric-label">Route type</span><span class="metric-value">Loop or Point-to-Point</span></div>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="demo-content">
+          <h3>Step 3 — AI Builds Your Route</h3>
+          <p>Hit "Generate My Route" and Route Runner gets to work. The OpenRouteService API calculates a real GPS route matching your distance and terrain preferences. Then Claude AI analyzes the route and writes a personalized description to get you pumped for your run.</p>
+          <div class="demo-visual">
+            <p style="font-size:0.85rem; font-weight:600; color:var(--navy); margin-bottom:0.75rem">What happens behind the scenes:</p>
+            <ul class="checklist">
+              <li>Your preferences are sent to the routing engine</li>
+              <li>Real road &amp; trail data is used to plan your path</li>
+              <li>Route is optimized for your chosen distance</li>
+              <li>Elevation data is calculated along the route</li>
+              <li>Claude AI writes your personalized route description</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="demo-content">
+          <h3>Step 4 — Review &amp; Adjust</h3>
+          <p>Your route appears on an interactive map in seconds. Review the key stats — actual distance, estimated time, elevation gain, and average pace. Not feeling the route? Hit "Try a Different Route" to instantly generate a fresh variation from the same start point.</p>
+          <div class="demo-visual">
+            <p style="font-size:0.85rem; font-weight:600; color:var(--navy); margin-bottom:0.75rem">Route stats you'll see</p>
+            <div class="metric-row"><span class="metric-label">Distance</span><span class="metric-value" style="color:var(--orange)">5.2 mi</span></div>
+            <div class="metric-row"><span class="metric-label">Estimated Time</span><span class="metric-value" style="color:var(--orange)">47 min</span></div>
+            <div class="metric-row"><span class="metric-label">Elevation Gain</span><span class="metric-value" style="color:var(--orange)">184 ft</span></div>
+            <div class="metric-row"><span class="metric-label">Avg Pace</span><span class="metric-value" style="color:var(--orange)">9:00 /mi</span></div>
+            <div style="margin-top:1rem;">
+              <p style="font-size:0.78rem; color:var(--gray); margin-bottom:0.4rem;">Route match to your preferences</p>
+              <div class="progress-track"><div class="progress-fill" style="width:96%"></div></div>
+              <p style="font-size:0.78rem; color:var(--orange); font-weight:600;">96% match to your requested distance</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 5 -->
+        <div class="demo-content">
+          <h3>Step 5 — Hit the Road!</h3>
+          <p>You've got your route — now go run it! Follow the map on your phone, enjoy a fresh path you've never run before, and say goodbye to repetitive loops or getting lost in unfamiliar areas. Every run is a new adventure with Route Runner.</p>
+          <div class="demo-visual">
+            <p style="font-size:0.85rem; font-weight:600; color:var(--navy); margin-bottom:0.75rem">Why runners love Route Runner</p>
+            <ul class="checklist">
+              <li>Never run the same route twice</li>
+              <li>Explore confidently in unfamiliar cities</li>
+              <li>Match your exact distance goal every time</li>
+              <li>Choose terrain that fits your training day</li>
+              <li>Get an AI pep talk before every run</li>
+            </ul>
+          </div>
+        </div>
+
+      </div><!-- /demo-panel -->
+    </div><!-- /demo-container -->
+  </section>
+
+  <!-- CTA -->
+  <section style="background:var(--light); padding:5rem 5%; text-align:center;" class="fade-in">
+    <div class="section-label">Ready to Run?</div>
+    <h2 class="section-title" style="margin:0 auto 0.75rem;">Generate your first route in seconds.</h2>
+    <p style="color:var(--gray); font-size:1.05rem; max-width:500px; margin:0 auto 2.5rem;">No sign-up needed. Just enter your location, set your distance, and go.</p>
+    <a href="route-generator.html" class="btn btn-primary" style="font-size:1.05rem; padding:1rem 2.5rem;">Generate My Route</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a class="nav-logo" href="index.html">
+          <svg width="30" height="30" viewBox="0 0 90 90" fill="none">
+            <defs>
+              <linearGradient id="hfb" x1="0" y1="0" x2="90" y2="90" gradientUnits="userSpaceOnUse"><stop stop-color="#1b2a4a"/><stop offset="1" stop-color="#2d4a7a"/></linearGradient>
+              <linearGradient id="hfr" x1="12" y1="0" x2="78" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#22c55e"/><stop offset="0.45" stop-color="#facc15"/><stop offset="1" stop-color="#f97316"/></linearGradient>
+            </defs>
+            <rect width="90" height="90" rx="20" fill="url(#hfb)"/>
+            <path d="M14 72 C18 72 20 44 32 48 C44 52 42 70 57 63 C64 59 68 40 74 34 C77 30 78 18 78 18" stroke="url(#hfr)" stroke-width="6" stroke-linecap="round" fill="none"/>
+            <circle cx="14" cy="72" r="7" fill="#22c55e"/>
+            <circle cx="14" cy="72" r="3.5" fill="white"/>
+            <circle cx="78" cy="14" r="7" fill="#f97316"/>
+            <circle cx="78" cy="14" r="3.5" fill="white"/>
+            <line x1="78" y1="21" x2="78" y2="31" stroke="#f97316" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+          Route Runner
+        </a>
+        <p>AI-powered route generation for runners who want fresh, personalized routes every run.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Pages</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <ul>
+          <li><a href="contact.html">Work With Me</a></li>
+          <li><a href="contact.html">Send a Message</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 Route Runner. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
