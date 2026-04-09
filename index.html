@@ -55,13 +55,82 @@
       </div>
     </div>
 
-    <!-- Decorative background SVG -->
-    <svg class="hero-graphic" width="500" height="500" viewBox="0 0 500 500" fill="none">
-      <circle cx="250" cy="250" r="240" stroke="white" stroke-width="2"/>
-      <circle cx="250" cy="250" r="180" stroke="white" stroke-width="1.5"/>
-      <circle cx="250" cy="250" r="120" stroke="white" stroke-width="1"/>
-    </svg>
+    <!-- Footprint animation -->
+    <div class="footprints-container" aria-hidden="true">
+      <div class="footprint fp-1 left"></div>
+      <div class="footprint fp-2 right"></div>
+      <div class="footprint fp-3 left"></div>
+      <div class="footprint fp-4 right"></div>
+      <div class="footprint fp-5 left"></div>
+      <div class="footprint fp-6 right"></div>
+      <div class="footprint fp-7 left"></div>
+      <div class="footprint fp-8 right"></div>
+    </div>
   </section>
+
+  <style>
+    .footprints-container {
+      position: absolute;
+      right: 6%;
+      top: 0;
+      bottom: 0;
+      width: 80px;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .footprint {
+      position: absolute;
+      width: 36px;
+      height: 52px;
+      opacity: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 52'%3E%3Cellipse cx='18' cy='34' rx='13' ry='17' fill='white' opacity='0.18'/%3E%3Cellipse cx='10' cy='14' rx='5' ry='7' fill='white' opacity='0.18'/%3E%3Cellipse cx='20' cy='11' rx='4.5' ry='6' fill='white' opacity='0.18'/%3E%3Cellipse cx='29' cy='14' rx='4' ry='5.5' fill='white' opacity='0.18'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-size: contain;
+      animation: footstep 3.2s ease-in-out infinite;
+    }
+
+    .footprint.right {
+      transform: scaleX(-1);
+    }
+
+    /* Stagger positions down the right side */
+    .fp-1 { right: 30px; top: 8%;  animation-delay: 0s; }
+    .fp-2 { right: 6px;  top: 18%; animation-delay: 0.4s; }
+    .fp-3 { right: 30px; top: 28%; animation-delay: 0.8s; }
+    .fp-4 { right: 6px;  top: 38%; animation-delay: 1.2s; }
+    .fp-5 { right: 30px; top: 48%; animation-delay: 1.6s; }
+    .fp-6 { right: 6px;  top: 58%; animation-delay: 2.0s; }
+    .fp-7 { right: 30px; top: 68%; animation-delay: 2.4s; }
+    .fp-8 { right: 6px;  top: 78%; animation-delay: 2.8s; }
+
+    @keyframes footstep {
+      0%   { opacity: 0; transform: scale(0.7); }
+      15%  { opacity: 1; transform: scale(1); }
+      70%  { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1); }
+    }
+
+    .footprint.right {
+      transform: scaleX(-1);
+    }
+
+    /* Keep right footprints mirrored during animation */
+    .footprint.right {
+      animation-name: footstep-right;
+    }
+
+    @keyframes footstep-right {
+      0%   { opacity: 0; transform: scaleX(-1) scale(0.7); }
+      15%  { opacity: 1; transform: scaleX(-1) scale(1); }
+      70%  { opacity: 1; transform: scaleX(-1) scale(1); }
+      100% { opacity: 0; transform: scaleX(-1) scale(1); }
+    }
+
+    @media (max-width: 640px) {
+      .footprints-container { display: none; }
+    }
+  </style>
 
   <!-- FEATURES -->
   <section class="services fade-in">
