@@ -827,8 +827,8 @@
     // ── Geocode address → [lng, lat] ──
     async function geocode(address) {
       const res = await fetch(`/api/geocode?text=${encodeURIComponent(address)}`);
-      if (!res.ok) throw new Error('Geocoding failed.');
       const data = await res.json();
+      if (!res.ok) throw new Error(`Geocoding failed (${res.status}): ${data.error?.message || JSON.stringify(data)}`);
       if (!data.features || data.features.length === 0) throw new Error(`Could not find "${address}". Try a more specific address.`);
       return data.features[0].geometry.coordinates;
     }

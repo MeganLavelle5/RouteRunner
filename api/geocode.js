@@ -9,5 +9,6 @@ export default async function handler(req, res) {
     `https://api.openrouteservice.org/geocode/search?api_key=${process.env.ORS_API_KEY}&text=${encodeURIComponent(text)}&size=1`
   );
   const data = await response.json();
+  console.log('ORS geocode status:', response.status, JSON.stringify(data));
   res.status(response.status).json(data);
 }
