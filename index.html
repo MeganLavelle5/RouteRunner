@@ -61,41 +61,63 @@
       <!-- Shoe sole SVG symbol — heel at top, toes at bottom (direction of travel) -->
       <svg style="position:absolute;width:0;height:0;overflow:hidden">
         <defs>
-          <symbol id="shoe-sole" viewBox="0 0 30 60">
-            <!-- Sole silhouette: rounded heel → narrow arch → wide ball → tapered toe -->
-            <path d="M15 2 C21 2 25 6 25 12 L24 18 C23 23 21 26 21 31 C21 35 24 41 25 47 C25 53 21 58 15 58 C9 58 5 53 5 47 C6 41 9 35 9 31 C9 26 7 23 6 18 L5 12 C5 6 9 2 15 2 Z"
-                  fill="white" fill-opacity="0.15" stroke="white" stroke-opacity="0.28" stroke-width="0.7"/>
+          <symbol id="shoe-sole" viewBox="0 0 32 72">
+            <!--
+              Heel = TOP (y≈2–22), wide & rounded
+              Arch = MIDDLE (y≈22–36), narrow waist
+              Ball = LOWER-MIDDLE (y≈36–52), widest point
+              Toe  = BOTTOM (y≈52–70), noticeably narrower & rounded
+            -->
+            <path d="
+              M 16 2
+              C 22 2, 27 7, 27 14
+              C 27 18, 25 21, 24 24
+              C 23 28, 22 31, 22 34
+              C 22 37, 25 42, 27 48
+              C 28 53, 25 62, 22 66
+              C 20 69, 18 71, 16 71
+              C 14 71, 12 69, 10 66
+              C 7 62, 4 53, 5 48
+              C 7 42, 10 37, 10 34
+              C 10 31, 9 28, 8 24
+              C 7 21, 5 18, 5 14
+              C 5 7, 10 2, 16 2 Z"
+              fill="white" fill-opacity="0.15" stroke="white" stroke-opacity="0.28" stroke-width="0.8"/>
 
-            <!-- Heel lugs — circular dots -->
-            <circle cx="11" cy="7"  r="1.6" fill="white" fill-opacity="0.48"/>
-            <circle cx="15" cy="5.5" r="1.6" fill="white" fill-opacity="0.48"/>
-            <circle cx="19" cy="7"  r="1.6" fill="white" fill-opacity="0.48"/>
-            <circle cx="9"  cy="12" r="1.4" fill="white" fill-opacity="0.40"/>
-            <circle cx="13" cy="13" r="1.4" fill="white" fill-opacity="0.40"/>
-            <circle cx="17" cy="13" r="1.4" fill="white" fill-opacity="0.40"/>
-            <circle cx="21" cy="12" r="1.4" fill="white" fill-opacity="0.40"/>
+            <!-- HEEL tread — circular rubber lugs (y 5–20) -->
+            <circle cx="12" cy="8"   r="1.8" fill="white" fill-opacity="0.50"/>
+            <circle cx="16" cy="6"   r="1.8" fill="white" fill-opacity="0.50"/>
+            <circle cx="20" cy="8"   r="1.8" fill="white" fill-opacity="0.50"/>
+            <circle cx="10" cy="14"  r="1.6" fill="white" fill-opacity="0.42"/>
+            <circle cx="14" cy="15"  r="1.6" fill="white" fill-opacity="0.42"/>
+            <circle cx="18" cy="15"  r="1.6" fill="white" fill-opacity="0.42"/>
+            <circle cx="22" cy="14"  r="1.6" fill="white" fill-opacity="0.42"/>
+            <circle cx="16" cy="20"  r="1.4" fill="white" fill-opacity="0.34"/>
 
-            <!-- Arch — single thin bar -->
-            <line x1="11" y1="26" x2="19" y2="26" stroke="white" stroke-opacity="0.22" stroke-width="1" stroke-linecap="round"/>
+            <!-- ARCH — narrow bridge, just two small bars -->
+            <line x1="12" y1="29" x2="20" y2="29" stroke="white" stroke-opacity="0.20" stroke-width="1.1" stroke-linecap="round"/>
 
-            <!-- Forefoot — herringbone chevrons (V pointing toward toe = downward) -->
-            <path d="M8 32 L15 37 L22 32"   fill="none" stroke="white" stroke-opacity="0.55" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M7.5 37.5 L15 43 L22.5 37.5" fill="none" stroke="white" stroke-opacity="0.50" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M7.5 43.5 L15 49 L22.5 43.5" fill="none" stroke="white" stroke-opacity="0.44" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <!-- Toe chevron -->
-            <path d="M9.5 50.5 L15 54.5 L20.5 50.5" fill="none" stroke="white" stroke-opacity="0.36" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- BALL / FOREFOOT — wide herringbone chevrons (V open toward toe = down) -->
+            <!-- widest at ball (y≈40–48), narrows toward toe -->
+            <path d="M 9 37 L 16 43 L 23 37"  fill="none" stroke="white" stroke-opacity="0.58" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 8 43 L 16 49 L 24 43"  fill="none" stroke="white" stroke-opacity="0.52" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 9 49 L 16 55 L 23 49"  fill="none" stroke="white" stroke-opacity="0.44" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+
+            <!-- TOE BOX — narrow chevrons (toe is smaller than heel) -->
+            <path d="M 11 57 L 16 61 L 21 57" fill="none" stroke="white" stroke-opacity="0.38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 12 63 L 16 66 L 20 63" fill="none" stroke="white" stroke-opacity="0.28" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
           </symbol>
         </defs>
       </svg>
 
-      <div class="footprint fp-1 left"><svg  width="30" height="60"><use href="#shoe-sole"/></svg></div>
-      <div class="footprint fp-2 right"><svg width="30" height="60"><use href="#shoe-sole"/></svg></div>
-      <div class="footprint fp-3 left"><svg  width="30" height="60"><use href="#shoe-sole"/></svg></div>
-      <div class="footprint fp-4 right"><svg width="30" height="60"><use href="#shoe-sole"/></svg></div>
-      <div class="footprint fp-5 left"><svg  width="30" height="60"><use href="#shoe-sole"/></svg></div>
-      <div class="footprint fp-6 right"><svg width="30" height="60"><use href="#shoe-sole"/></svg></div>
-      <div class="footprint fp-7 left"><svg  width="30" height="60"><use href="#shoe-sole"/></svg></div>
-      <div class="footprint fp-8 right"><svg width="30" height="60"><use href="#shoe-sole"/></svg></div>
+      <div class="footprint fp-1 left"><svg width="32" height="72"><use href="#shoe-sole"/></svg></div>
+      <div class="footprint fp-2 right"><svg width="32" height="72"><use href="#shoe-sole"/></svg></div>
+      <div class="footprint fp-3 left"><svg width="32" height="72"><use href="#shoe-sole"/></svg></div>
+      <div class="footprint fp-4 right"><svg width="32" height="72"><use href="#shoe-sole"/></svg></div>
+      <div class="footprint fp-5 left"><svg width="32" height="72"><use href="#shoe-sole"/></svg></div>
+      <div class="footprint fp-6 right"><svg width="32" height="72"><use href="#shoe-sole"/></svg></div>
+      <div class="footprint fp-7 left"><svg width="32" height="72"><use href="#shoe-sole"/></svg></div>
+      <div class="footprint fp-8 right"><svg width="32" height="72"><use href="#shoe-sole"/></svg></div>
     </div>
   </section>
 
@@ -112,8 +134,8 @@
 
     .footprint {
       position: absolute;
-      width: 30px;
-      height: 60px;
+      width: 32px;
+      height: 72px;
       opacity: 0;
       transform-origin: center center;
       animation: footstep-left 3.2s ease-in-out infinite;
