@@ -6,7 +6,8 @@ export default async function handler(req, res) {
   if (!text) return res.status(400).json({ error: 'Missing text parameter' });
 
   const response = await fetch(
-    `https://api.openrouteservice.org/geocode/search?api_key=${process.env.ORS_API_KEY}&text=${encodeURIComponent(text)}&size=1`
+    `https://api.openrouteservice.org/geocode/search?text=${encodeURIComponent(text)}&size=1`,
+    { headers: { 'Authorization': process.env.ORS_API_KEY.trim() } }
   );
   const data = await response.json();
   console.log('ORS geocode status:', response.status, JSON.stringify(data));
