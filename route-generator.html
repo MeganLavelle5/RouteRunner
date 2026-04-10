@@ -862,21 +862,35 @@
       return data.features[0].geometry.coordinates;
     }
 
+    // ── Offset a coordinate by bearing + distance ──
+    function offsetCoord(lng, lat, bearingDeg, distanceM) {
+      const R = 6371000;
+      const d = distanceM / R;
+      const b = ((bearingDeg % 360) + 360) % 360 * Math.PI / 180;
+      const lat1 = lat * Math.PI / 180;
+      const lng1 = lng * Math.PI / 180;
+      const lat2 = Math.asin(Math.sin(lat1)*Math.cos(d) + Math.cos(lat1)*Math.sin(d)*Math.cos(b));
+      const lng2 = lng1 + Math.atan2(Math.sin(b)*Math.sin(d)*Math.cos(lat1), Math.cos(d) - Math.sin(lat1)*Math.sin(lat2));
+      return [lng2 * 180/Math.PI, lat2 * 180/Math.PI];
+    }
+
     // ── Generate Route via ORS ──
     async function generateRoute(startCoords, endCoords, distanceMiles, seed) {
       const distanceMeters = distanceMiles * 1609.34;
       let body;
 
       if (selectedRouteType === 'loop') {
+        // Calculate triangle waypoints for accurate distance control.
+        // Triangle perimeter = 3 * chord = 3 * R√3 ≈ 5.196*R
+        // Roads add ~20-35% overhead depending on terrain.
+        const overhead = selectedTerrain === 'hilly' ? 1.32 : selectedTerrain === 'mixed' ? 1.25 : 1.18;
+        const R = distanceMeters / (5.196 * overhead);
+        // Vary the bearing based on seed so "Try Again" gives a different direction
+        const bearing = (seed * 137.5) % 360;
+        const w1 = offsetCoord(startCoords[0], startCoords[1], bearing,       R);
+        const w2 = offsetCoord(startCoords[0], startCoords[1], bearing + 120,  R);
         body = {
-          coordinates: [startCoords],
-          options: {
-            round_trip: {
-              length: distanceMeters,
-              points: selectedTerrain === 'hilly' ? 8 : selectedTerrain === 'mixed' ? 5 : 3,
-              seed: seed
-            }
-          },
+          coordinates: [startCoords, w1, w2, startCoords],
           elevation: true,
           instructions: false
         };
