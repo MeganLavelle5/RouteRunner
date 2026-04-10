@@ -57,14 +57,37 @@
 
     <!-- Footprint animation -->
     <div class="footprints-container" aria-hidden="true">
-      <div class="footprint fp-1 left"></div>
-      <div class="footprint fp-2 right"></div>
-      <div class="footprint fp-3 left"></div>
-      <div class="footprint fp-4 right"></div>
-      <div class="footprint fp-5 left"></div>
-      <div class="footprint fp-6 right"></div>
-      <div class="footprint fp-7 left"></div>
-      <div class="footprint fp-8 right"></div>
+
+      <!-- Shoe sole SVG symbol — heel at top, toes at bottom (direction of travel) -->
+      <svg style="position:absolute;width:0;height:0;overflow:hidden">
+        <defs>
+          <symbol id="shoe-sole" viewBox="0 0 30 58">
+            <!-- Sole silhouette: wide heel → narrow arch → wide forefoot → rounded toe -->
+            <path d="M15 2 C21 2 25 6 25 11 L25 19 C25 22 22 24 20 24 C22 27 25 32 25 38 L24 46 C23 52 19 57 15 57 C11 57 7 52 6 46 L5 38 C5 32 8 27 10 24 C8 24 5 22 5 19 L5 11 C5 6 9 2 15 2 Z"
+                  fill="white" fill-opacity="0.15" stroke="white" stroke-opacity="0.22" stroke-width="0.6"/>
+            <!-- Heel tread lugs -->
+            <rect x="8"  y="5"  width="14" height="2.5" rx="1.25" fill="white" fill-opacity="0.32"/>
+            <rect x="8"  y="9"  width="14" height="2.5" rx="1.25" fill="white" fill-opacity="0.26"/>
+            <rect x="9"  y="13" width="12" height="2"   rx="1"    fill="white" fill-opacity="0.2"/>
+            <!-- Arch — no tread (typical running shoe) -->
+            <!-- Forefoot tread lugs -->
+            <rect x="7"  y="31" width="16" height="2.5" rx="1.25" fill="white" fill-opacity="0.32"/>
+            <rect x="7"  y="36" width="16" height="2.5" rx="1.25" fill="white" fill-opacity="0.28"/>
+            <rect x="7"  y="41" width="16" height="2.5" rx="1.25" fill="white" fill-opacity="0.24"/>
+            <!-- Toe cap -->
+            <rect x="9"  y="47" width="12" height="2"   rx="1"    fill="white" fill-opacity="0.2"/>
+          </symbol>
+        </defs>
+      </svg>
+
+      <div class="footprint fp-1 left"><svg  width="30" height="58"><use href="#shoe-sole"/></svg></div>
+      <div class="footprint fp-2 right"><svg width="30" height="58"><use href="#shoe-sole"/></svg></div>
+      <div class="footprint fp-3 left"><svg  width="30" height="58"><use href="#shoe-sole"/></svg></div>
+      <div class="footprint fp-4 right"><svg width="30" height="58"><use href="#shoe-sole"/></svg></div>
+      <div class="footprint fp-5 left"><svg  width="30" height="58"><use href="#shoe-sole"/></svg></div>
+      <div class="footprint fp-6 right"><svg width="30" height="58"><use href="#shoe-sole"/></svg></div>
+      <div class="footprint fp-7 left"><svg  width="30" height="58"><use href="#shoe-sole"/></svg></div>
+      <div class="footprint fp-8 right"><svg width="30" height="58"><use href="#shoe-sole"/></svg></div>
     </div>
   </section>
 
@@ -81,50 +104,41 @@
 
     .footprint {
       position: absolute;
-      width: 36px;
-      height: 52px;
+      width: 30px;
+      height: 58px;
       opacity: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 52'%3E%3Cellipse cx='18' cy='34' rx='13' ry='17' fill='white' opacity='0.18'/%3E%3Cellipse cx='10' cy='14' rx='5' ry='7' fill='white' opacity='0.18'/%3E%3Cellipse cx='20' cy='11' rx='4.5' ry='6' fill='white' opacity='0.18'/%3E%3Cellipse cx='29' cy='14' rx='4' ry='5.5' fill='white' opacity='0.18'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-size: contain;
-      animation: footstep 3.2s ease-in-out infinite;
+      transform-origin: center center;
+      animation: footstep-left 3.2s ease-in-out infinite;
     }
 
-    .footprint.right {
-      transform: scaleX(-1);
-    }
-
-    /* Stagger positions down the right side */
-    .fp-1 { right: 30px; top: 8%;  animation-delay: 0s; }
-    .fp-2 { right: 6px;  top: 18%; animation-delay: 0.4s; }
-    .fp-3 { right: 30px; top: 28%; animation-delay: 0.8s; }
-    .fp-4 { right: 6px;  top: 38%; animation-delay: 1.2s; }
-    .fp-5 { right: 30px; top: 48%; animation-delay: 1.6s; }
-    .fp-6 { right: 6px;  top: 58%; animation-delay: 2.0s; }
-    .fp-7 { right: 30px; top: 68%; animation-delay: 2.4s; }
-    .fp-8 { right: 6px;  top: 78%; animation-delay: 2.8s; }
-
-    @keyframes footstep {
-      0%   { opacity: 0; transform: scale(0.7); }
-      15%  { opacity: 1; transform: scale(1); }
-      70%  { opacity: 1; transform: scale(1); }
-      100% { opacity: 0; transform: scale(1); }
-    }
-
-    .footprint.right {
-      transform: scaleX(-1);
-    }
-
-    /* Keep right footprints mirrored during animation */
     .footprint.right {
       animation-name: footstep-right;
     }
 
+    /* Alternating left/right positions — natural walking track */
+    .fp-1 { right: 34px; top: 6%;  animation-delay: 0s; }
+    .fp-2 { right: 4px;  top: 16%; animation-delay: 0.4s; }
+    .fp-3 { right: 34px; top: 26%; animation-delay: 0.8s; }
+    .fp-4 { right: 4px;  top: 36%; animation-delay: 1.2s; }
+    .fp-5 { right: 34px; top: 46%; animation-delay: 1.6s; }
+    .fp-6 { right: 4px;  top: 56%; animation-delay: 2.0s; }
+    .fp-7 { right: 34px; top: 66%; animation-delay: 2.4s; }
+    .fp-8 { right: 4px;  top: 76%; animation-delay: 2.8s; }
+
+    /* Left foot: slight toe-out to the left (-8deg) */
+    @keyframes footstep-left {
+      0%   { opacity: 0; transform: rotate(-8deg) scale(0.75); }
+      15%  { opacity: 1; transform: rotate(-8deg) scale(1); }
+      70%  { opacity: 1; transform: rotate(-8deg) scale(1); }
+      100% { opacity: 0; transform: rotate(-8deg) scale(1); }
+    }
+
+    /* Right foot: mirrored + toe-out to the right (+8deg) */
     @keyframes footstep-right {
-      0%   { opacity: 0; transform: scaleX(-1) scale(0.7); }
-      15%  { opacity: 1; transform: scaleX(-1) scale(1); }
-      70%  { opacity: 1; transform: scaleX(-1) scale(1); }
-      100% { opacity: 0; transform: scaleX(-1) scale(1); }
+      0%   { opacity: 0; transform: scaleX(-1) rotate(-8deg) scale(0.75); }
+      15%  { opacity: 1; transform: scaleX(-1) rotate(-8deg) scale(1); }
+      70%  { opacity: 1; transform: scaleX(-1) rotate(-8deg) scale(1); }
+      100% { opacity: 0; transform: scaleX(-1) rotate(-8deg) scale(1); }
     }
 
     @media (max-width: 640px) {
