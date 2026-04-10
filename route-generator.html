@@ -752,6 +752,35 @@
 
   </div><!-- /rg-layout -->
 
+  <!-- AUTH MODAL -->
+  <div class="auth-modal-overlay" id="authModalOverlay">
+    <div class="auth-modal">
+      <button class="auth-modal-close" id="authModalClose">✕</button>
+      <h3>Your Route Runner Account</h3>
+      <div class="auth-tabs">
+        <div class="auth-tab active" data-tab="signin">Sign In</div>
+        <div class="auth-tab" data-tab="signup">Create Account</div>
+      </div>
+
+      <!-- Sign In -->
+      <div id="authSignInForm">
+        <input type="email" id="signInEmail" placeholder="Email address">
+        <input type="password" id="signInPassword" placeholder="Password">
+        <button class="auth-submit-btn" id="signInSubmit">Sign In</button>
+        <p class="auth-error" id="signInError"></p>
+      </div>
+
+      <!-- Sign Up -->
+      <div id="authSignUpForm" style="display:none;">
+        <input type="email" id="signUpEmail" placeholder="Email address">
+        <input type="password" id="signUpPassword" placeholder="Password (min 6 characters)">
+        <button class="auth-submit-btn" id="signUpSubmit">Create Account</button>
+        <p class="auth-error" id="signUpError"></p>
+        <p class="auth-success" id="signUpSuccess">Account created! Check your email to confirm, then sign in.</p>
+      </div>
+    </div>
+  </div>
+
   <script>
     // API calls go through /api serverless functions (keys are secret on the server)
 
@@ -1278,35 +1307,6 @@ ${trkpts}
     }
 
   </script>
-
-  <!-- AUTH MODAL -->
-  <div class="auth-modal-overlay" id="authModalOverlay">
-    <div class="auth-modal">
-      <button class="auth-modal-close" id="authModalClose">✕</button>
-      <h3>Your Route Runner Account</h3>
-      <div class="auth-tabs">
-        <div class="auth-tab active" data-tab="signin">Sign In</div>
-        <div class="auth-tab" data-tab="signup">Create Account</div>
-      </div>
-
-      <!-- Sign In -->
-      <div id="authSignInForm">
-        <input type="email" id="signInEmail" placeholder="Email address">
-        <input type="password" id="signInPassword" placeholder="Password">
-        <button class="auth-submit-btn" id="signInSubmit">Sign In</button>
-        <p class="auth-error" id="signInError"></p>
-      </div>
-
-      <!-- Sign Up -->
-      <div id="authSignUpForm" style="display:none;">
-        <input type="email" id="signUpEmail" placeholder="Email address">
-        <input type="password" id="signUpPassword" placeholder="Password (min 6 characters)">
-        <button class="auth-submit-btn" id="signUpSubmit">Create Account</button>
-        <p class="auth-error" id="signUpError"></p>
-        <p class="auth-success" id="signUpSuccess">Account created! Check your email to confirm, then sign in.</p>
-      </div>
-    </div>
-  </div>
 
 </body>
 </html>
