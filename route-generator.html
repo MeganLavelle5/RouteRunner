@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     /* ── API KEY BANNER ── */
     .api-banner {
@@ -369,6 +370,185 @@
       overflow: hidden;
     }
 
+    /* ── AUTH BUTTON (panel header) ── */
+    .auth-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.2rem;
+    }
+    .auth-header-row h2 { margin-bottom: 0; }
+    .auth-btn-small {
+      background: rgba(255,255,255,0.12);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 6px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .auth-btn-small:hover { background: rgba(255,255,255,0.22); }
+    .user-email-label {
+      color: rgba(255,255,255,0.55);
+      font-size: 0.75rem;
+      margin-top: 0.15rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ── SAVE BUTTON ── */
+    .save-btn {
+      width: 100%;
+      padding: 0.65rem;
+      background: transparent;
+      color: var(--navy);
+      border: 2px solid var(--navy);
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 0.5rem;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+    .save-btn:hover { background: rgba(27,42,74,0.07); }
+    .save-btn.visible { display: flex; }
+    .save-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    /* ── SAVED ROUTES SECTION ── */
+    .saved-routes-section {
+      border-top: 1px solid var(--gray-light);
+      padding: 1.2rem 1.5rem;
+      display: none;
+    }
+    .saved-routes-section h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--navy);
+      margin-bottom: 0.75rem;
+    }
+    .saved-route-item {
+      padding: 0.65rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--gray-light);
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .saved-route-item:hover { border-color: var(--orange); background: rgba(249,115,22,0.04); }
+    .sri-label { font-weight: 700; font-size: 0.85rem; color: var(--navy); text-transform: capitalize; }
+    .sri-meta { font-size: 0.75rem; color: var(--gray); margin-top: 0.15rem; }
+    .sri-delete {
+      float: right;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--gray);
+      font-size: 0.85rem;
+      padding: 0;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+    .sri-delete:hover { color: #dc2626; }
+    .saved-routes-empty { font-size: 0.82rem; color: var(--gray); }
+
+    /* ── AUTH MODAL ── */
+    .auth-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .auth-modal-overlay.open { display: flex; }
+    .auth-modal {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    .auth-modal-close {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: var(--gray);
+      line-height: 1;
+    }
+    .auth-modal h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 1.2rem;
+    }
+    .auth-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 1.2rem;
+      border-bottom: 2px solid var(--gray-light);
+    }
+    .auth-tab {
+      padding: 0.5rem 1rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--gray);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+    }
+    .auth-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+    .auth-modal input[type="email"],
+    .auth-modal input[type="password"] {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      border: 2px solid var(--gray-light);
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      margin-bottom: 0.75rem;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.2s;
+    }
+    .auth-modal input:focus { border-color: var(--orange); }
+    .auth-submit-btn {
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--orange);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .auth-submit-btn:hover { background: var(--orange-dark); }
+    .auth-error { color: #dc2626; font-size: 0.82rem; margin-top: 0.5rem; min-height: 1.2em; }
+    .auth-success { color: #16a34a; font-size: 0.82rem; margin-top: 0.5rem; display: none; }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 860px) {
       .rg-layout {
@@ -428,8 +608,12 @@
     <!-- LEFT: FORM PANEL -->
     <div class="rg-panel">
       <div class="rg-panel-header">
-        <h2>Generate Your Route</h2>
-        <p>Tell us your preferences and we'll build the perfect run.</p>
+        <div class="auth-header-row">
+          <h2>Generate Your Route</h2>
+          <button class="auth-btn-small" id="authBtn">Sign In</button>
+        </div>
+        <p id="userEmailLabel" class="user-email-label"></p>
+        <p id="panelSubtitle" style="color:rgba(255,255,255,0.65);font-size:0.82rem;">Tell us your preferences and we'll build the perfect run.</p>
       </div>
 
       <div class="rg-form">
@@ -511,8 +695,19 @@
           Import into Garmin Connect, Apple Fitness, Strava, or any GPS app.
         </p>
 
+        <button class="save-btn" id="saveBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Save This Route
+        </button>
+
         <div class="error-toast" id="errorToast"></div>
 
+      </div>
+
+      <!-- Saved Routes -->
+      <div class="saved-routes-section" id="savedRoutesSection">
+        <h3>My Saved Routes</h3>
+        <div id="savedRoutesList"><p class="saved-routes-empty">No saved routes yet.</p></div>
       </div>
 
       <!-- AI Description -->
@@ -853,6 +1048,7 @@ ${trkpts}
         document.getElementById('retryBtn').classList.add('visible');
         document.getElementById('gpxBtn').classList.add('visible');
         document.getElementById('gpxHint').style.display = 'block';
+        if (currentUser) document.getElementById('saveBtn').classList.add('visible');
 
       } catch (err) {
         showError(err.message);
@@ -870,6 +1066,7 @@ ${trkpts}
       currentSeed = Math.floor(Math.random() * 9999);
       document.getElementById('gpxBtn').classList.remove('visible');
       document.getElementById('gpxHint').style.display = 'none';
+      document.getElementById('saveBtn').classList.remove('visible');
       handleGenerate();
     });
 
@@ -879,6 +1076,237 @@ ${trkpts}
     document.querySelector('.hamburger').addEventListener('click', () => {
       document.querySelector('.nav-links').classList.toggle('open');
     });
+
+    // ══════════════════════════════════════════
+    // SUPABASE — paste your keys here
+    // ══════════════════════════════════════════
+    const SUPABASE_URL      = 'YOUR_SUPABASE_URL';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    // ══════════════════════════════════════════
+
+    const _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let currentUser = null;
+
+    // ── Auth state ──
+    _sb.auth.getSession().then(({ data: { session } }) => {
+      if (session) { currentUser = session.user; onSignedIn(); }
+    });
+
+    _sb.auth.onAuthStateChange((_event, session) => {
+      currentUser = session?.user ?? null;
+      if (currentUser) onSignedIn(); else onSignedOut();
+    });
+
+    function onSignedIn() {
+      document.getElementById('authBtn').textContent = 'Sign Out';
+      document.getElementById('userEmailLabel').textContent = currentUser.email;
+      document.getElementById('panelSubtitle').style.display = 'none';
+      document.getElementById('savedRoutesSection').style.display = 'block';
+      loadSavedRoutes();
+      if (currentRouteCoords) document.getElementById('saveBtn').classList.add('visible');
+    }
+
+    function onSignedOut() {
+      document.getElementById('authBtn').textContent = 'Sign In';
+      document.getElementById('userEmailLabel').textContent = '';
+      document.getElementById('panelSubtitle').style.display = 'block';
+      document.getElementById('savedRoutesSection').style.display = 'none';
+      document.getElementById('saveBtn').classList.remove('visible');
+    }
+
+    // ── Auth button ──
+    document.getElementById('authBtn').addEventListener('click', () => {
+      if (currentUser) {
+        _sb.auth.signOut();
+      } else {
+        document.getElementById('authModalOverlay').classList.add('open');
+      }
+    });
+
+    document.getElementById('authModalClose').addEventListener('click', () => {
+      document.getElementById('authModalOverlay').classList.remove('open');
+    });
+
+    document.getElementById('authModalOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('authModalOverlay'))
+        document.getElementById('authModalOverlay').classList.remove('open');
+    });
+
+    // ── Tab switching ──
+    document.querySelectorAll('.auth-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('authSignInForm').style.display = tab.dataset.tab === 'signin' ? 'block' : 'none';
+        document.getElementById('authSignUpForm').style.display  = tab.dataset.tab === 'signup'  ? 'block' : 'none';
+      });
+    });
+
+    // ── Sign in ──
+    document.getElementById('signInSubmit').addEventListener('click', async () => {
+      const email    = document.getElementById('signInEmail').value.trim();
+      const password = document.getElementById('signInPassword').value;
+      document.getElementById('signInError').textContent = '';
+      const { error } = await _sb.auth.signInWithPassword({ email, password });
+      if (error) {
+        document.getElementById('signInError').textContent = error.message;
+      } else {
+        document.getElementById('authModalOverlay').classList.remove('open');
+      }
+    });
+
+    // ── Sign up ──
+    document.getElementById('signUpSubmit').addEventListener('click', async () => {
+      const email    = document.getElementById('signUpEmail').value.trim();
+      const password = document.getElementById('signUpPassword').value;
+      document.getElementById('signUpError').textContent = '';
+      const { error } = await _sb.auth.signUp({ email, password });
+      if (error) {
+        document.getElementById('signUpError').textContent = error.message;
+      } else {
+        document.getElementById('signUpSuccess').style.display = 'block';
+      }
+    });
+
+    // ── Save route ──
+    async function saveRoute() {
+      if (!currentUser || !currentRouteCoords) return;
+      const btn = document.getElementById('saveBtn');
+      btn.textContent = 'Saving…';
+      btn.disabled = true;
+
+      const distMi = parseFloat(currentRouteLabel);
+      const elevFt = parseInt(document.getElementById('statElevation').textContent) || 0;
+      const pace   = selectedTerrain === 'hilly' ? 11 : selectedTerrain === 'mixed' ? 10 : 9;
+      const durMin = Math.round(distMi * pace);
+
+      const { error } = await _sb.from('saved_routes').insert({
+        user_id:          currentUser.id,
+        label:            currentRouteLabel,
+        distance_miles:   distMi,
+        elevation_ft:     elevFt,
+        duration_minutes: durMin,
+        terrain:          selectedTerrain,
+        route_type:       selectedRouteType,
+        start_address:    document.getElementById('startAddress').value.trim() || 'My Location',
+        ai_description:   document.getElementById('aiText').textContent,
+        coords:           currentRouteCoords
+      });
+
+      if (error) {
+        btn.innerHTML = '⚠ Save Failed';
+        btn.disabled = false;
+      } else {
+        btn.innerHTML = '✓ Saved!';
+        loadSavedRoutes();
+        setTimeout(() => {
+          btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save This Route`;
+          btn.disabled = false;
+        }, 2000);
+      }
+    }
+
+    document.getElementById('saveBtn').addEventListener('click', saveRoute);
+
+    // ── Load saved routes list ──
+    async function loadSavedRoutes() {
+      const list = document.getElementById('savedRoutesList');
+      list.innerHTML = '<p class="saved-routes-empty">Loading…</p>';
+
+      const { data, error } = await _sb
+        .from('saved_routes')
+        .select('id, created_at, label, distance_miles, terrain, start_address, elevation_ft, duration_minutes, ai_description, coords')
+        .order('created_at', { ascending: false })
+        .limit(20);
+
+      if (error || !data || data.length === 0) {
+        list.innerHTML = '<p class="saved-routes-empty">No saved routes yet. Generate a route and hit Save!</p>';
+        return;
+      }
+
+      window._savedRoutes = data;
+      list.innerHTML = data.map(r => {
+        const date  = new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const label = r.label || `${r.distance_miles} mi ${r.terrain}`;
+        return `
+          <div class="saved-route-item" onclick="loadSavedRoute('${r.id}')">
+            <button class="sri-delete" onclick="event.stopPropagation();deleteSavedRoute('${r.id}')" title="Delete">✕</button>
+            <div class="sri-label">${label}</div>
+            <div class="sri-meta">${date} · ${r.start_address || ''}</div>
+          </div>`;
+      }).join('');
+    }
+
+    // ── Load a saved route onto the map ──
+    function loadSavedRoute(id) {
+      const route = (window._savedRoutes || []).find(r => r.id === id);
+      if (!route || !route.coords) return;
+
+      currentRouteCoords = route.coords;
+      currentRouteLabel  = route.label || `${route.distance_miles} mi ${route.terrain}`;
+      selectedTerrain    = route.terrain    || 'flat';
+      selectedRouteType  = route.route_type || 'loop';
+
+      const geojson = {
+        type: 'FeatureCollection',
+        features: [{
+          type: 'Feature',
+          geometry: { type: 'LineString', coordinates: route.coords },
+          properties: { summary: { distance: route.distance_miles * 1609.34 } }
+        }]
+      };
+
+      drawRoute(geojson);
+      showStats(route.distance_miles, route.elevation_ft || 0);
+      document.getElementById('emptyState').style.display = 'none';
+
+      if (route.ai_description) {
+        document.getElementById('aiDescription').classList.add('visible');
+        document.getElementById('aiText').textContent = route.ai_description;
+      }
+
+      document.getElementById('retryBtn').classList.add('visible');
+      document.getElementById('gpxBtn').classList.add('visible');
+      document.getElementById('gpxHint').style.display = 'block';
+    }
+
+    // ── Delete a saved route ──
+    async function deleteSavedRoute(id) {
+      if (!confirm('Delete this saved route?')) return;
+      await _sb.from('saved_routes').delete().eq('id', id);
+      loadSavedRoutes();
+    }
+
   </script>
+
+  <!-- AUTH MODAL -->
+  <div class="auth-modal-overlay" id="authModalOverlay">
+    <div class="auth-modal">
+      <button class="auth-modal-close" id="authModalClose">✕</button>
+      <h3>Your Route Runner Account</h3>
+      <div class="auth-tabs">
+        <div class="auth-tab active" data-tab="signin">Sign In</div>
+        <div class="auth-tab" data-tab="signup">Create Account</div>
+      </div>
+
+      <!-- Sign In -->
+      <div id="authSignInForm">
+        <input type="email" id="signInEmail" placeholder="Email address">
+        <input type="password" id="signInPassword" placeholder="Password">
+        <button class="auth-submit-btn" id="signInSubmit">Sign In</button>
+        <p class="auth-error" id="signInError"></p>
+      </div>
+
+      <!-- Sign Up -->
+      <div id="authSignUpForm" style="display:none;">
+        <input type="email" id="signUpEmail" placeholder="Email address">
+        <input type="password" id="signUpPassword" placeholder="Password (min 6 characters)">
+        <button class="auth-submit-btn" id="signUpSubmit">Create Account</button>
+        <p class="auth-error" id="signUpError"></p>
+        <p class="auth-success" id="signUpSuccess">Account created! Check your email to confirm, then sign in.</p>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
