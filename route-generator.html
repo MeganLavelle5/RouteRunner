@@ -240,6 +240,28 @@
     .retry-btn:hover { border-color: var(--navy); }
     .retry-btn.visible { display: block; }
 
+    .gpx-btn {
+      width: 100%;
+      padding: 0.65rem;
+      background: transparent;
+      color: #22c55e;
+      border: 2px solid #22c55e;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 0.5rem;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+
+    .gpx-btn:hover { background: rgba(34,197,94,0.08); }
+    .gpx-btn.visible { display: flex; }
+
     /* Loading spinner */
     .spinner {
       width: 18px; height: 18px;
@@ -480,6 +502,15 @@
           🔄 Try a Different Route
         </button>
 
+        <button class="gpx-btn" id="gpxBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download GPX
+        </button>
+
+        <p id="gpxHint" style="display:none;font-size:0.75rem;color:var(--gray);margin-top:0.4rem;line-height:1.5;">
+          Import into Garmin Connect, Apple Fitness, Strava, or any GPS app.
+        </p>
+
         <div class="error-toast" id="errorToast"></div>
 
       </div>
@@ -535,6 +566,8 @@
     let selectedTerrain = 'flat';
     let selectedRouteType = 'loop';
     let startCoords = null;
+    let currentRouteCoords = null;   // stored for GPX export
+    let currentRouteLabel = '';      // e.g. "5.0 mi flat loop"
 
     // ── Init Leaflet map ──
     map = L.map('map', { zoomControl: true }).setView([40.7934, -77.8600], 13);
@@ -720,6 +753,37 @@
       return minutes;
     }
 
+    // ── GPX export ──
+    function downloadGPX() {
+      if (!currentRouteCoords) return;
+      const now = new Date().toISOString();
+      const trkpts = currentRouteCoords.map(c => {
+        const lon = c[0], lat = c[1], ele = c[2] != null ? c[2] : 0;
+        return `      <trkpt lat="${lat.toFixed(6)}" lon="${lon.toFixed(6)}"><ele>${ele.toFixed(1)}</ele></trkpt>`;
+      }).join('\n');
+
+      const gpx = `<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="Route Runner" xmlns="http://www.topografix.com/GPX/1/1"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata><time>${now}</time></metadata>
+  <trk>
+    <name>Route Runner — ${currentRouteLabel}</name>
+    <trkseg>
+${trkpts}
+    </trkseg>
+  </trk>
+</gpx>`;
+
+      const blob = new Blob([gpx], { type: 'application/gpx+xml' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = `route-runner-${currentRouteLabel.replace(/\s+/g, '-').toLowerCase()}.gpx`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
     // ── Error helper ──
     function showError(msg) {
       const toast = document.getElementById('errorToast');
@@ -781,8 +845,14 @@
         const description = await getAIDescription(startAddr || 'your location', actualMiles.toFixed(1), selectedTerrain, elevGain, minutes);
         document.getElementById('aiText').textContent = description;
 
-        // Show retry button
+        // Store route for GPX export
+        currentRouteCoords = coords;
+        currentRouteLabel  = `${actualMiles.toFixed(1)} mi ${selectedTerrain} ${selectedRouteType}`;
+
+        // Show retry + GPX buttons
         document.getElementById('retryBtn').classList.add('visible');
+        document.getElementById('gpxBtn').classList.add('visible');
+        document.getElementById('gpxHint').style.display = 'block';
 
       } catch (err) {
         showError(err.message);
@@ -798,8 +868,12 @@
 
     document.getElementById('retryBtn').addEventListener('click', () => {
       currentSeed = Math.floor(Math.random() * 9999);
+      document.getElementById('gpxBtn').classList.remove('visible');
+      document.getElementById('gpxHint').style.display = 'none';
       handleGenerate();
     });
+
+    document.getElementById('gpxBtn').addEventListener('click', downloadGPX);
 
     // Hamburger nav
     document.querySelector('.hamburger').addEventListener('click', () => {
