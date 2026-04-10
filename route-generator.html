@@ -527,12 +527,7 @@
   </div><!-- /rg-layout -->
 
   <script>
-    // ============================================================
-    //  🔑 ADD YOUR API KEYS HERE
-    // ============================================================
-    const ORS_API_KEY   = 'key here';    // openrouteservice.org
-    const CLAUDE_API_KEY = 'key here'; // console.anthropic.com
-    // ============================================================
+    // API calls go through /api serverless functions (keys are secret on the server)
 
     // ── State ──
     let map, routeLayer, startMarker, endMarker;
@@ -603,12 +598,11 @@
 
     // ── Geocode address → [lng, lat] ──
     async function geocode(address) {
-      const url = `https://api.openrouteservice.org/geocode/search?api_key=${ORS_API_KEY}&text=${encodeURIComponent(address)}&size=1`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('Geocoding failed. Check your ORS API key.');
+      const res = await fetch(`/api/geocode?text=${encodeURIComponent(address)}`);
+      if (!res.ok) throw new Error('Geocoding failed.');
       const data = await res.json();
       if (!data.features || data.features.length === 0) throw new Error(`Could not find "${address}". Try a more specific address.`);
-      return data.features[0].geometry.coordinates; // [lng, lat]
+      return data.features[0].geometry.coordinates;
     }
 
     // ── Generate Route via ORS ──
@@ -637,18 +631,15 @@
         };
       }
 
-      const res = await fetch('https://api.openrouteservice.org/v2/directions/foot-walking/geojson', {
+      const res = await fetch('/api/generate-route', {
         method: 'POST',
-        headers: {
-          'Authorization': ORS_API_KEY,
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       });
 
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.error?.message || 'Route generation failed. Check your ORS API key.');
+        throw new Error(err.error?.message || 'Route generation failed.');
       }
 
       return await res.json();
@@ -666,36 +657,14 @@
 
     // ── Claude AI route description ──
     async function getAIDescription(startAddress, distanceMiles, terrain, elevGain, minutes) {
-      if (CLAUDE_API_KEY === 'YOUR_CLAUDE_API_KEY') {
-        return `A ${distanceMiles}-mile ${terrain} loop starting from ${startAddress}. ` +
-          `Estimated ${minutes} minutes with ${elevGain} ft of elevation gain. ` +
-          `Add your Claude API key to get a personalized AI description of this route!`;
-      }
-
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch('/api/route-description', {
         method: 'POST',
-        headers: {
-          'x-api-key': CLAUDE_API_KEY,
-          'anthropic-version': '2023-06-01',
-          'content-type': 'application/json',
-          'anthropic-dangerous-allow-browser': 'true'
-        },
-        body: JSON.stringify({
-          model: 'claude-haiku-4-5-20251001',
-          max_tokens: 180,
-          messages: [{
-            role: 'user',
-            content: `You are an enthusiastic running coach. Write 2-3 energetic sentences describing this running route to get a runner excited. Be specific and motivating. No intro phrases like "Here is" or "This route".
-
-Route: ${distanceMiles} miles, ${terrain} terrain, starting near ${startAddress}
-Elevation gain: ${elevGain} ft, Estimated time: ${minutes} min`
-          }]
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ startAddress, distanceMiles, terrain, elevGain, minutes })
       });
-
-      if (!res.ok) return 'Could not load AI description. Check your Claude API key.';
+      if (!res.ok) return `A ${distanceMiles}-mile ${terrain} route starting near ${startAddress}. Estimated ${minutes} min with ${elevGain} ft elevation gain.`;
       const data = await res.json();
-      return data.content[0].text;
+      return data.description;
     }
 
     // ── Draw route on map ──
@@ -775,10 +744,6 @@ Elevation gain: ${elevGain} ft, Estimated time: ${minutes} min`
         return;
       }
 
-      if (ORS_API_KEY === 'YOUR_ORS_API_KEY') {
-        showError('Please add your OpenRouteService API key in the <script> tag at the bottom of route-generator.html.');
-        return;
-      }
 
       // Loading state
       const btn = document.getElementById('generateBtn');
